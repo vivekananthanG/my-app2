@@ -1,38 +1,119 @@
 .App {
-  text-align: center;
+  font-family: sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.Card-poster {
+  height: 340px;
+  width: 340px;
+  object-fit:contain;
+
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.Card-name {
+  font-size: 24px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.positiond{
+  position:relative;
+}
+
+.Card-specs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.Card {
+  width: 340px;
+  color: white;
+  background-color: rgb(14, 3, 1);;
+  border: 1px solid ;
+}
+.movie-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1rem;
+  justify-items: center;
+}
+
+.rate{
+  margin: 5%;
+}
+
+
+.counter-container{
+  display: flex;
+  gap:10px
+}
+
+.counter-container>button{
+  font-size: 1.2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  background: rgb(243, 52, 4);
+  opacity: 0.7;
+  height: 30px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.header1 img {
+  height: 2rem;
+  width: auto;
+}
+
+.container {
+  padding: 2rem;
+  height: auto;
+}
+
+.add-movie-form {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.submit:hover {
+  cursor:pointer;
+  color: #000;
+}
+
+.input-text {
+  border-radius: 7px;
+  height: 4rem;
+  width: 50%;
+  font-size: 20px;
+  font-family: "Courier New", Courier, monospace;
+  margin: auto;
+}
+
+.movie-actions{
+display: flex;
+justify-content: center;
+margin-top: 5%;
+gap: 0.5rem;
+}
+
+body{
+  background-color: #f2f2f2;
+}
+/* .Card {
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-items: center;
+  border: 2px solid rgb(131, 129, 129);
+  padding: 10px;
+  width: 20rem;
+  height: 25rem;
+  display: inline-grid;
+  margin: 1rem 2rem;
+  
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+.Card-poster {
+  justify-content: center;
+  height: 10rem;
+  width: auto;
+  object-fit: cover;
+} */
