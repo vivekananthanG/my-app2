@@ -25,8 +25,6 @@
 .Card {
   width: 340px;
   color: white;
-  background-color: rgb(14, 3, 1);;
-  border: 1px solid ;
 }
 .movie-list {
   display: grid;
@@ -98,6 +96,12 @@ gap: 0.5rem;
 
 body{
   background-color: #f2f2f2;
+}
+
+nav{
+display: flex;
+flex-direction: column;
+gap: 1rem;
 }
 /* .Card {
   justify-content: center;

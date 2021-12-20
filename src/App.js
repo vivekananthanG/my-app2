@@ -1,5 +1,6 @@
 import './App.css';
 import { useState } from "react";
+import { Switch, Route, Link, nav } from "react-router-dom";
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Rating from '@mui/material/Rating';
@@ -27,6 +28,8 @@ import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import PrintIcon from '@mui/icons-material/Print';
 import ShareIcon from '@mui/icons-material/Share';
+import Badge from '@mui/material/Badge';
+import Card from '@mui/material/Card';
 
 const pages = ['Movies', 'Category', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -82,91 +85,118 @@ function App() {
   const [poster, setPoster] = useState("");
   const [rating, setRating] = useState("");
   const [summary, setSummary] = useState("");
+  const deleteMovie = (index) => {
+    const deleteIndex = index;
+    const remainingMovies = movieList.filter((mv, idx) => deleteIndex !== idx);
+    setMovieList(remainingMovies);
+  }
   return (
     <div className="App">
+
       <Header />
+      <MenuLink />
+      <Switch>
+        <Route path="/home">
+          <h1>Welcome to Movie app 😊😊😊!!!</h1>
+        </Route>
+          <Route path="/addmovie">
+          <div className="container">
+            <div className="add-movie-form">
+              <h2>Add a Movie</h2>
+              <TextField id="outlined-basic" variant="outlined"
 
-      <div className="container">
-        <div className="add-movie-form">
-          <h2>Add a Movie</h2>
-          <TextField id="outlined-basic" variant="outlined"
+                onChange={(event) => setName(event.target.value)}
+                value={name}
+                type="text"
+                name="name"
+                label="Enter Movie Name"
+                className="input-text"
+              />
+              <TextField id="outlined-basic" variant="outlined"
+                value={poster}
+                onChange={(event) => setPoster(event.target.value)}
+                type="text"
+                name="poster"
+                label="Enter Movie Poster URL"
+                className="input-text"
+              />
+              <TextField id="outlined-basic" variant="outlined"
 
-            onChange={(event) => setName(event.target.value)}
-            value={name}
-            type="text"
-            name="name"
-            label="Enter Movie Name"
-            className="input-text"
-          />
-          <TextField id="outlined-basic" variant="outlined"
-            value={poster}
-            onChange={(event) => setPoster(event.target.value)}
-            type="text"
-            name="poster"
-            label="Enter Movie Poster URL"
-            className="input-text"
-          />
-          <TextField id="outlined-basic" variant="outlined"
+                value={rating}
+                onChange={(event) => setRating(event.target.value)}
+                type="text"
+                name="rating"
+                label="Enter Movie Rating"
+                className="input-text"
+              />
+              <TextField id="outlined-basic" variant="outlined"
 
-            value={rating}
-            onChange={(event) => setRating(event.target.value)}
-            type="text"
-            name="rating"
-            label="Enter Movie Rating"
-            className="input-text"
-          />
-          <TextField id="outlined-basic" variant="outlined"
+                value={summary}
+                onChange={(event) => setSummary(event.target.value)}
+                type="text"
+                name="summary"
+                label="Enter Movie Summary"
+                className="input-text"
+              />
+              <Button variant="outlined" onClick={() => {
 
-            value={summary}
-            onChange={(event) => setSummary(event.target.value)}
-            type="text"
-            name="summary"
-            label="Enter Movie Summary"
-            className="input-text"
-          />
-          <Button variant="outlined" onClick={() => {
-            
-            const newMovie = {
-              name,
-              poster,
-              rating,
-              summary
-            };//short hand
-            setMovieList([...movieList, newMovie]);
-          }
-          }
-          >
-            Add Movie
-          </Button>
-  
+                const newMovie = {
+                  name,
+                  poster,
+                  rating,
+                  summary
+                };//short hand
+                setMovieList([...movieList, newMovie]);
+                {alert("Movie Added");}
+              }
+              }
+              >
+                Add Movie
+              </Button>
 
-        </div>
-      </div>
 
-      <div className="movie-list">
-        {movieList.map(({ name, poster, rating, summary }, i) => (
-          <Movie
-            key={i}
-            deleteButton={<Button variant="contained" startIcon={<DeleteIcon />} color="error" onClick={() => {
-              const deleteIndex = i;
-              const remainingMovies = movieList.filter((mv, idx) => deleteIndex !== idx);
-              setMovieList(remainingMovies);
-            }}>Delete</Button>}
-            name={name}
-            poster={poster}
-            rating={rating}
-            summary={summary}
-          />
-        ))}
-      </div>
-      <div className="positiond">
-      <BasicSpeedDial />
-      </div>
+            </div>
+          </div>
+          </Route>
+          <Route path="/movies">
+          <div className="movie-list">
+            {movieList.map(({ name, poster, rating, summary }, i) => (
+              <Movie
+                key={i}
+                deleteButton={<Button variant="contained" startIcon={<DeleteIcon />} color="error" onClick={() => deleteMovie(i)}>Delete</Button>}
+                name={name}
+                poster={poster}
+                rating={rating}
+                summary={summary}
+              />
+            ))}
+          </div>
+          <div className="positiond">
+            <BasicSpeedDial />
+          </div>
+        </Route>
+        <Route path="/colorgame">
+          <AddColor />
+        </Route>
+
+      </Switch>
+      
     </div>
   );
 }
 
 export default App;
+
+function MenuLink(){
+  return(
+    <nav>
+        <Link to="/home">Home</Link>
+        <Link to="/movies">Movies</Link>
+        <Link to="/addmovie">Add Movie</Link>
+        <Link to="/colorgame">Color game</Link>
+      </nav>
+  );
+}
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -188,110 +218,110 @@ function Header() {
   };
   return (
     <div className='header1'>
-     
+
       <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-          >
-             <img
-        src="https://4.bp.blogspot.com/-mL98KmcE8Kk/XMv9jXDde0I/AAAAAAAAACk/DqKziD6eVrYFGU14tmS1r6QXUFaGZkEtQCK4BGAYYCw/s1600/JPEG%2BLOGO.jpg"
-        alt="header"
-      />
-          </Typography>
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+            >
+              <img
+                src="https://4.bp.blogspot.com/-mL98KmcE8Kk/XMv9jXDde0I/AAAAAAAAACk/DqKziD6eVrYFGU14tmS1r6QXUFaGZkEtQCK4BGAYYCw/s1600/JPEG%2BLOGO.jpg"
+                alt="header"
+              />
+            </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
-          >
-            LOGO
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
               >
-                {page}
-              </Button>
-            ))}
-          </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <MenuIcon />
               </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                  display: { xs: 'block', md: 'none' },
+                }}
+              >
+                {pages.map((page) => (
+                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+              LOGO
+            </Typography>
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+              {pages.map((page) => (
+                <Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  {page}
+                </Button>
               ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+            </Box>
+
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem key={setting} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
 
     </div>
   );
@@ -306,7 +336,7 @@ function Movie({ name, poster, rating, summary, deleteButton }) {
 
   const styles = rating >= 8.5 ? { color: "green" } : { color: "red" };
   return (
-    <div className="Card">
+    <Card className="Card">
       <img src={poster} alt={name} className="Card-poster" />
       <div className="Card-specs">
         <h3 className="Card-name">{name} </h3>
@@ -323,7 +353,7 @@ function Movie({ name, poster, rating, summary, deleteButton }) {
           id="panel1bh-header"
         >
           <Typography sx={{ width: '33%', flexShrink: 0 }}>
-          Toggle dessciption
+            Toggle dessciption
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -340,7 +370,7 @@ function Movie({ name, poster, rating, summary, deleteButton }) {
         Rate Movie:
         <Rating name="customized-10" defaultValue={rating} max={10} size="Large" />
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -350,14 +380,19 @@ function Counter() {
   const [dislike, setDisLike] = useState(0);
   return (
     <div className="counter-container">
-      <Button variant="contained" onClick={() => setLike(like + 1)}>
-        {like}
-        <span role="👍">👍</span>
-      </Button>
-      <Button variant="contained" onClick={() => setDisLike(dislike + 1)}>
-        {dislike}
-        <span role="👎">👎</span>
-      </Button>
+
+      <IconButton color="primary" onClick={() => setLike(like + 1)} aria-label="like movie">
+        <Badge badgeContent={like} color="primary">
+          👍
+        </Badge>
+      </IconButton>
+
+      <IconButton color="error" onClick={() => setDisLike(dislike + 1)} aria-label="Dislike movie">
+        <Badge badgeContent={dislike} color="error">
+          👎
+        </Badge>
+      </IconButton>
+
     </div>
   );
 }
@@ -380,4 +415,38 @@ function BasicSpeedDial() {
       </SpeedDial>
     </Box>
   );
+}
+
+function AddColor() {
+  const [color, setColor] = useState("pink");
+  const styles = { background: color };
+  const [colorList, setColorList] = useState(["teal", "crimson", "orange"]);
+  return (
+    <div>
+      <input
+        value={color}
+        onChange={(event) => setColor(event.target.value)}
+        style={styles}
+        placeholder="Enter a color"
+      />
+      {/*create a copy of colorlist and the new color to it as we must not chnage colorlist   */}
+      <button onClick={() => setColorList([...colorList, color])}>
+        Add Color
+      </button>
+
+      {colorList.map((clr) => (
+        <ColorBox clr={clr} />
+      ))}
+    </div>
+  );
+}
+
+function ColorBox({ clr }) {
+  const styles = {
+    height: "25px",
+    width: "250px",
+    background: clr,
+    marginTop: "10px"
+  };
+  return <div style={styles}></div>;
 }
