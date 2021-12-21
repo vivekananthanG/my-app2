@@ -1,6 +1,6 @@
 import './App.css';
 import { useState } from "react";
-import { Switch, Route, Link, nav } from "react-router-dom";
+import { Switch, Route, Link, nav, useHistory, Redirect, useParams } from "react-router-dom";
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Rating from '@mui/material/Rating';
@@ -30,6 +30,7 @@ import PrintIcon from '@mui/icons-material/Print';
 import ShareIcon from '@mui/icons-material/Share';
 import Badge from '@mui/material/Badge';
 import Card from '@mui/material/Card';
+import InfoIcon from '@mui/icons-material/Info';
 
 const pages = ['Movies', 'Category', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -50,23 +51,26 @@ function App() {
         "https://m.media-amazon.com/images/M/MV5BMTM0MDgwNjMyMl5BMl5BanBnXkFtZTcwNTg3NzAzMw@@._V1_FMjpg_UX1000_.jpg",
       rating: 7,
       summary:
-        "With the world now aware that he is Iron Man, billionaire inventor Tony Stark (Robert Downey Jr.) faces pressure from all sides to share his technology with the military. He is reluctant to divulge the secrets of his armored suit, fearing the information will fall into the wrong hands. With Pepper Potts (Gwyneth Paltrow) and Rhodes (Don Cheadle) by his side, Tony must forge new alliances and confront a powerful new enemy."
-    },
+        "With the world now aware that he is Iron Man, billionaire inventor Tony Stark (Robert Downey Jr.) faces pressure from all sides to share his technology with the military. He is reluctant to divulge the secrets of his armored suit, fearing the information will fall into the wrong hands. With Pepper Potts (Gwyneth Paltrow) and Rhodes (Don Cheadle) by his side, Tony must forge new alliances and confront a powerful new enemy.",
+      trailer:"https://www.youtube.com/embed/wKtcmiifycU",
+      },
     {
       name: "No Country for Old Men",
       poster:
         "https://upload.wikimedia.org/wikipedia/en/8/8b/No_Country_for_Old_Men_poster.jpg",
       rating: 8.1,
       summary:
-        "A hunter's life takes a drastic turn when he discovers two million dollars while strolling through the aftermath of a drug deal. He is then pursued by a psychopathic killer who wants the money."
-    },
+        "A hunter's life takes a drastic turn when he discovers two million dollars while strolling through the aftermath of a drug deal. He is then pursued by a psychopathic killer who wants the money.",
+      trailer:"https://youtu.be/wFwI_YegpKY"
+      },
     {
       name: "Jai Bhim",
       poster:
         "https://m.media-amazon.com/images/M/MV5BY2Y5ZWMwZDgtZDQxYy00Mjk0LThhY2YtMmU1MTRmMjVhMjRiXkEyXkFqcGdeQXVyMTI1NDEyNTM5._V1_FMjpg_UX1000_.jpg",
       summary:
         "A tribal woman and a righteous lawyer battle in court to unravel the mystery around the disappearance of her husband, who was picked up the police on a false case",
-      rating: 8.8
+      rating: 8.8,
+      trailer:"https://youtu.be/Gc6dEDnL8JA"
     },
     {
       name: "The Avengers",
@@ -76,15 +80,13 @@ function App() {
         a 2012 American superhero film based on the Marvel Comics superhero team
         of the same name.`,
       poster:
-        "https://terrigen-cdn-dev.marvel.com/content/prod/1x/avengersendgame_lob_crd_05.jpg"
+        "https://terrigen-cdn-dev.marvel.com/content/prod/1x/avengersendgame_lob_crd_05.jpg",
+      trailer:"https://youtu.be/eOrNdBpGMv8"
     }
   ]);
 
   const [movieList, setMovieList] = useState(initial_movies);
-  const [name, setName] = useState("");
-  const [poster, setPoster] = useState("");
-  const [rating, setRating] = useState("");
-  const [summary, setSummary] = useState("");
+
   const deleteMovie = (index) => {
     const deleteIndex = index;
     const remainingMovies = movieList.filter((mv, idx) => deleteIndex !== idx);
@@ -96,69 +98,19 @@ function App() {
       <Header />
       <MenuLink />
       <Switch>
-        <Route path="/home">
+        <Route exact path="/">
           <h1>Welcome to Movie app 😊😊😊!!!</h1>
         </Route>
-          <Route path="/addmovie">
-          <div className="container">
-            <div className="add-movie-form">
-              <h2>Add a Movie</h2>
-              <TextField id="outlined-basic" variant="outlined"
-
-                onChange={(event) => setName(event.target.value)}
-                value={name}
-                type="text"
-                name="name"
-                label="Enter Movie Name"
-                className="input-text"
-              />
-              <TextField id="outlined-basic" variant="outlined"
-                value={poster}
-                onChange={(event) => setPoster(event.target.value)}
-                type="text"
-                name="poster"
-                label="Enter Movie Poster URL"
-                className="input-text"
-              />
-              <TextField id="outlined-basic" variant="outlined"
-
-                value={rating}
-                onChange={(event) => setRating(event.target.value)}
-                type="text"
-                name="rating"
-                label="Enter Movie Rating"
-                className="input-text"
-              />
-              <TextField id="outlined-basic" variant="outlined"
-
-                value={summary}
-                onChange={(event) => setSummary(event.target.value)}
-                type="text"
-                name="summary"
-                label="Enter Movie Summary"
-                className="input-text"
-              />
-              <Button variant="outlined" onClick={() => {
-
-                const newMovie = {
-                  name,
-                  poster,
-                  rating,
-                  summary
-                };//short hand
-                setMovieList([...movieList, newMovie]);
-                {alert("Movie Added");}
-              }
-              }
-              >
-                Add Movie
-              </Button>
-
-
-            </div>
-          </div>
-          </Route>
-          <Route path="/movies">
+        <Route path="/films">
+          <Redirect to="/movies" />
+        </Route>
+        <Route path="/movies/:id">
+          <MovieDetails movieList={movieList}/>
+        </Route>
+        <Route path="/movie/add">
+          <AddMovie movieList={movieList} setMovieList={setMovieList} />
+        </Route>
+        <Route path="/movies">
           <div className="movie-list">
             {movieList.map(({ name, poster, rating, summary }, i) => (
               <Movie
@@ -168,6 +120,7 @@ function App() {
                 poster={poster}
                 rating={rating}
                 summary={summary}
+                id={i}
               />
             ))}
           </div>
@@ -178,23 +131,135 @@ function App() {
         <Route path="/colorgame">
           <AddColor />
         </Route>
+        <Route path="**"><NotFound /></Route>
 
       </Switch>
-      
+
     </div>
   );
 }
 
 export default App;
 
-function MenuLink(){
+function MovieDetails(movieList) {
+  const { id } = useParams();
+  return (
+    movieList.filter((mv, idx) => idx == id).map(({ name, rating, summary,trailer })=>
+    <Movieshow
+    name={name}
+    rating={rating}
+    summary={summary}
+    trailer={trailer}
+    />
+  ));
+}
+
+function Movieshow({ name, rating, summary, trailer }){
   return(
+    <div>
+      {console.log(name)}
+      <iframe width="100%" 
+      height="530" 
+      src={trailer}
+      title="YouTube video player" 
+      frameborder="0" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+      allowfullscreen></iframe>
+      <div className='movie-details-container'>
+        <div className='movie-spec'>
+          <h3 className='movie-name'>{name}</h3>
+          <p className='movie-rating'>⭐{rating}</p>
+        </div>
+        <p className='movie-summary'>{summary}</p>
+      </div>
+    </div>
+  );
+}
+
+function AddMovie({ movieList, setMovieList }) {
+  const [name, setName] = useState("");
+  const [poster, setPoster] = useState("");
+  const [rating, setRating] = useState("");
+  const [summary, setSummary] = useState("");
+  const history = useHistory();
+
+  return (<div className="container">
+    <div className="add-movie-form">
+      <h2>Add a Movie</h2>
+      <TextField id="outlined-basic" variant="outlined"
+
+        onChange={(event) => setName(event.target.value)}
+        value={name}
+        type="text"
+        name="name"
+        label="Enter Movie Name"
+        className="input-text"
+      />
+      <TextField id="outlined-basic" variant="outlined"
+        value={poster}
+        onChange={(event) => setPoster(event.target.value)}
+        type="text"
+        name="poster"
+        label="Enter Movie Poster URL"
+        className="input-text"
+      />
+      <TextField id="outlined-basic" variant="outlined"
+
+        value={rating}
+        onChange={(event) => setRating(event.target.value)}
+        type="text"
+        name="rating"
+        label="Enter Movie Rating"
+        className="input-text"
+      />
+      <TextField id="outlined-basic" variant="outlined"
+
+        value={summary}
+        onChange={(event) => setSummary(event.target.value)}
+        type="text"
+        name="summary"
+        label="Enter Movie Summary"
+        className="input-text"
+      />
+      <Button variant="outlined" onClick={() => {
+
+        const newMovie = {
+          name,
+          poster,
+          rating,
+          summary
+        };//short hand
+        setMovieList([...movieList, newMovie]);
+        history.push("/movies");
+      }
+      }
+      >
+        Add Movie
+      </Button>
+
+
+    </div>
+  </div>);
+}
+
+
+function NotFound() {
+  return (
+    <div className='not-found'>
+      <h2>404</h2>
+      <img alt='' src='https://webartdevelopers.com/blog/wp-content/uploads/2020/02/404-Error-Page-Caveman-Mode-Pure-CSS.gif' className='not-found-img'></img>
+    </div>
+  );
+}
+
+function MenuLink() {
+  return (
     <nav>
-        <Link to="/home">Home</Link>
-        <Link to="/movies">Movies</Link>
-        <Link to="/addmovie">Add Movie</Link>
-        <Link to="/colorgame">Color game</Link>
-      </nav>
+      <Link to="/">Home</Link>
+      <Link to="/movies">Movies</Link>
+      <Link to="/movie/add">Add Movie</Link>
+      <Link to="/colorgame">Color game</Link>
+    </nav>
   );
 }
 
@@ -327,7 +392,8 @@ function Header() {
   );
 }
 
-function Movie({ name, poster, rating, summary, deleteButton }) {
+function Movie({ name, poster, rating, summary, deleteButton, id }) {
+  const history1 = useHistory();
   const [expanded, setExpanded] = useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -339,7 +405,7 @@ function Movie({ name, poster, rating, summary, deleteButton }) {
     <Card className="Card">
       <img src={poster} alt={name} className="Card-poster" />
       <div className="Card-specs">
-        <h3 className="Card-name">{name} </h3>
+        <h3 className="Card-name">{name} <IconButton onClick={() => history1.push(`/movies/${id}`)} color="primary" aria-label="movie details"><InfoIcon /></IconButton></h3>
         <p style={styles} className="Card-rating">
           ⭐{rating}
         </p>
