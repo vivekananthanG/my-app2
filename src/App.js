@@ -31,6 +31,10 @@ import ShareIcon from '@mui/icons-material/Share';
 import Badge from '@mui/material/Badge';
 import Card from '@mui/material/Card';
 import InfoIcon from '@mui/icons-material/Info';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import useWindowSize from 'react-use/lib/useWindowSize'
+import Confetti from 'react-confetti'
+
 
 const pages = ['Movies', 'Category', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -41,10 +45,20 @@ const actions = [
   { icon: <ShareIcon />, name: 'Share' },
 ];
 
+
 function App() {
 
 
-  const initial_movies = ([
+  const initial_movies = [
+    {
+      name: "RRR",
+      poster:
+        "https://englishtribuneimages.blob.core.windows.net/gallary-content/2021/6/Desk/2021_6$largeimg_977224513.JPG",
+      rating: 8.8,
+      summary:
+        "RRR is an upcoming Indian Telugu-language period action drama film directed by S. S. Rajamouli, and produced by D. V. V. Danayya of DVV Entertainments.",
+      trailer: "https://www.youtube.com/embed/f_vbAtFSEc0"
+    },
     {
       name: "Iron man 2",
       poster:
@@ -52,8 +66,8 @@ function App() {
       rating: 7,
       summary:
         "With the world now aware that he is Iron Man, billionaire inventor Tony Stark (Robert Downey Jr.) faces pressure from all sides to share his technology with the military. He is reluctant to divulge the secrets of his armored suit, fearing the information will fall into the wrong hands. With Pepper Potts (Gwyneth Paltrow) and Rhodes (Don Cheadle) by his side, Tony must forge new alliances and confront a powerful new enemy.",
-      trailer:"https://www.youtube.com/embed/wKtcmiifycU",
-      },
+      trailer: "https://www.youtube.com/embed/wKtcmiifycU"
+    },
     {
       name: "No Country for Old Men",
       poster:
@@ -61,8 +75,8 @@ function App() {
       rating: 8.1,
       summary:
         "A hunter's life takes a drastic turn when he discovers two million dollars while strolling through the aftermath of a drug deal. He is then pursued by a psychopathic killer who wants the money.",
-      trailer:"https://youtu.be/wFwI_YegpKY"
-      },
+      trailer: "https://www.youtube.com/embed/38A__WT3-o0"
+    },
     {
       name: "Jai Bhim",
       poster:
@@ -70,20 +84,43 @@ function App() {
       summary:
         "A tribal woman and a righteous lawyer battle in court to unravel the mystery around the disappearance of her husband, who was picked up the police on a false case",
       rating: 8.8,
-      trailer:"https://youtu.be/Gc6dEDnL8JA"
+      trailer: "https://www.youtube.com/embed/nnXpbTFrqXA"
     },
     {
       name: "The Avengers",
       rating: 8,
-      summary: `Marvel's The Avengers (classified under the name Marvel Avengers
-        Assemble in the United Kingdom and Ireland), or simply The Avengers, is
-        a 2012 American superhero film based on the Marvel Comics superhero team
-        of the same name.`,
+      summary:
+        "Marvel's The Avengers (classified under the name Marvel Avengers\n Assemble in the United Kingdom and Ireland), or simply The Avengers, is\n a 2012 American superhero film based on the Marvel Comics superhero team\n of the same name.",
       poster:
         "https://terrigen-cdn-dev.marvel.com/content/prod/1x/avengersendgame_lob_crd_05.jpg",
-      trailer:"https://youtu.be/eOrNdBpGMv8"
+      trailer: "https://www.youtube.com/embed/eOrNdBpGMv8"
+    },
+    {
+      name: "Interstellar",
+      poster: "https://m.media-amazon.com/images/I/A1JVqNMI7UL._SL1500_.jpg",
+      rating: 8.6,
+      summary:
+        "When Earth becomes uninhabitable in the future, a farmer and ex-NASA\n pilot, Joseph Cooper, is tasked to pilot a spacecraft, along with a team\n of researchers, to find a new planet for humans.",
+      trailer: "https://www.youtube.com/embed/zSWdZVtXT7E"
+    },
+    {
+      name: "Baahubali",
+      poster: "https://flxt.tmsimg.com/assets/p11546593_p_v10_af.jpg",
+      rating: 8,
+      summary:
+        "In the kingdom of Mahishmati, Shivudu falls in love with a young warrior woman. While trying to woo her, he learns about the conflict-ridden past of his family and his true legacy.",
+      trailer: "https://www.youtube.com/embed/sOEg_YZQsTI"
+    },
+    {
+      name: "Ratatouille",
+      poster:
+        "https://resizing.flixster.com/gL_JpWcD7sNHNYSwI1ff069Yyug=/ems.ZW1zLXByZC1hc3NldHMvbW92aWVzLzc4ZmJhZjZiLTEzNWMtNDIwOC1hYzU1LTgwZjE3ZjQzNTdiNy5qcGc=",
+      rating: 8,
+      summary:
+        "Remy, a rat, aspires to become a renowned French chef. However, he fails to realise that people despise rodents and will never enjoy a meal cooked by him.",
+      trailer: "https://www.youtube.com/embed/NgsQ8mVkN8w"
     }
-  ]);
+  ];
 
   const [movieList, setMovieList] = useState(initial_movies);
 
@@ -92,89 +129,184 @@ function App() {
     const remainingMovies = movieList.filter((mv, idx) => deleteIndex !== idx);
     setMovieList(remainingMovies);
   }
+  const history4 = useHistory();
   return (
     <div className="App">
 
-      <Header />
-      <MenuLink />
-      <Switch>
-        <Route exact path="/">
-          <h1>Welcome to Movie app 😊😊😊!!!</h1>
-        </Route>
-        <Route path="/films">
-          <Redirect to="/movies" />
-        </Route>
-        <Route path="/movies/:id">
-          <MovieDetails movieList={movieList}/>
-        </Route>
-        <Route path="/movie/add">
-          <AddMovie movieList={movieList} setMovieList={setMovieList} />
-        </Route>
-        <Route path="/movies">
-          <div className="movie-list">
-            {movieList.map(({ name, poster, rating, summary }, i) => (
-              <Movie
-                key={i}
-                deleteButton={<Button variant="contained" startIcon={<DeleteIcon />} color="error" onClick={() => deleteMovie(i)}>Delete</Button>}
-                name={name}
-                poster={poster}
-                rating={rating}
-                summary={summary}
-                id={i}
-              />
-            ))}
-          </div>
-          <div className="positiond">
-            <BasicSpeedDial />
-          </div>
-        </Route>
-        <Route path="/colorgame">
-          <AddColor />
-        </Route>
-        <Route path="**"><NotFound /></Route>
+      {/* <Header /> */}
+      <div>
+        <AppBar className="static">
+          <Toolbar>
+            <Button color='inherit' onClick={() => history4.push("/")}>Home</Button>
+            <Button color='inherit' onClick={() => history4.push("/movies")}>Movies</Button>
+            <Button color='inherit' onClick={() => history4.push("/films")}>Films</Button>
+            <Button color='inherit' onClick={() => history4.push("/movie/add")}>Add Movie</Button>
+            <Button color='inherit' onClick={() => history4.push("/colorgame")}>Color Game</Button>
+            <Button color='inherit' onClick={() => history4.push("/game")}>TicTacToe</Button>
+          </Toolbar>
+        </AppBar>
+      </div>
+      {/* <MenuLink /> */}
+      <section className='router1'>
+        <Switch>
+          <Route exact path="/">
+            <h1>Welcome to Movie app 😊😊😊!!!</h1>
+          </Route>
+          <Route path="/films">
+            <Redirect to="/movies" />
+          </Route>
+          <Route path="/movies/:id">
+            <MovieDetails movieList={movieList} />
+          </Route>
+          <Route path="/movie/add">
+            <AddMovie movieList={movieList} setMovieList={setMovieList} />
+          </Route>
+          <Route path="/movies">
+            <div className="movie-list">
+              {movieList.map(({ name, poster, rating, summary }, i) => (
+                <Movie
+                  key={i}
+                  deleteButton={<Button variant="contained" startIcon={<DeleteIcon />} color="error" onClick={() => deleteMovie(i)}>Delete</Button>}
+                  name={name}
+                  poster={poster}
+                  rating={rating}
+                  summary={summary}
+                  id={i}
+                />
+              ))}
+            </div>
+            <div className="positiond">
+              <BasicSpeedDial />
+            </div>
+          </Route>
+          <Route path="/colorgame">
+            <AddColor />
+          </Route>
+          <Route path="/game">
+            <TicTacToe />
+          </Route>
+          <Route path="**"><NotFound /></Route>
 
-      </Switch>
-
+        </Switch>
+      </section>
     </div>
   );
 }
 
 export default App;
 
-function MovieDetails(movieList) {
-  const { id } = useParams();
+
+
+
+function TicTacToe() {
+  const { width, height } = useWindowSize();
+  const init=Array(9).fill(null);
+  const [board, setBoard] = useState(init);
+  //X starts the turn so true 
+  
+  const [isXturn, setIsXTurn] = useState(true);
+ 
+ 
+  const handleClick = (index) => {
+    //update only untouched box
+    //falsy logic
+    //no winner and no null
+    if (!winner && !board[index]) {
+      const boardCopy = [...board];
+      boardCopy[index] = isXturn ? "X" : "O";
+      setBoard(boardCopy);
+      setIsXTurn(!isXturn);
+    }
+  };
+
+ 
+  function decideWinner(board){
+    const lines = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+    for (let i = 0; i < lines.length; i++) {
+      const [a, b, c] = lines[i];
+      console.log(board[a], board[b], board[c]);
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        console.log("winner is", board[a]);
+        return board[a];
+      } 
+    }
+    //when no winner
+    return null;
+  };
+
+
+  const winner = decideWinner(board);
+  console.log(winner)
+
+  let status;
+  if (winner) {
+    status = 'Winner is : ' + winner;
+  } else {
+    status = 'Next player: ' + (isXturn ? "X" : "O");
+  }
+
+ 
+
   return (
-    movieList.filter((mv, idx) => idx == id).map(({ name, rating, summary,trailer })=>
-    <Movieshow
-    name={name}
-    rating={rating}
-    summary={summary}
-    trailer={trailer}
-    />
-  ));
+    <div className='container'>
+      {winner ? <Confetti width={width} height={height} gravity={0.03} /> : ""}
+      <div>{status}
+      <Button type="button" className="btn" onClick={()=>{setBoard(init)}}>Reset</Button>
+      
+      </div>
+      <div className='grid'>
+        {board.map((val, index) => (<GameBox key={index} val={val} onPlayerClick={() => handleClick(index)} />))}
+      </div>
+      {winner ? <h2>The winner is {winner}</h2> : ""}
+    </div>
+  );
 }
 
-function Movieshow({ name, rating, summary, trailer }){
-  return(
+function GameBox({ val, onPlayerClick }) {
+
+  const styles = { color: val === "X" ? "green" : "red" }
+
+  return (
+    <div style={styles} onClick={() => onPlayerClick()} className='game-box'>
+      {val}
+    </div>);
+}
+
+function MovieDetails({ movieList }) {
+  const { id } = useParams();
+  const movie = movieList[id];
+  const history2 = useHistory();
+
+  return (
     <div>
-      {console.log(name)}
-      <iframe width="100%" 
-      height="530" 
-      src={trailer}
-      title="YouTube video player" 
-      frameborder="0" 
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-      allowfullscreen></iframe>
+      <iframe width="100%"
+        height="530"
+        src={movie.trailer}
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
       <div className='movie-details-container'>
         <div className='movie-spec'>
-          <h3 className='movie-name'>{name}</h3>
-          <p className='movie-rating'>⭐{rating}</p>
+          <h3 className='movie-name'>{movie.name}</h3>
+          <p className='movie-rating'>⭐{movie.rating}</p>
         </div>
-        <p className='movie-summary'>{summary}</p>
+        <p className='movie-summary'>{movie.summary}</p>
+        <Button variant="outlined" startIcon={<ArrowBackIosIcon />} onClick={() => history2.goBack()}>BACK</Button>
       </div>
     </div>
   );
 }
+
 
 function AddMovie({ movieList, setMovieList }) {
   const [name, setName] = useState("");
