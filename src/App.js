@@ -1,6 +1,6 @@
 import './App.css';
-import { useState } from "react";
-import { Switch, Route, Link, nav, useHistory, Redirect, useParams } from "react-router-dom";
+import { useState,createContext,useContext } from "react";
+import { Switch, Route, useHistory, Redirect, useParams } from "react-router-dom";
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Rating from '@mui/material/Rating';
@@ -15,12 +15,12 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
+// import Menu from '@mui/material/Menu';
+// import MenuIcon from '@mui/icons-material/Menu';
+// import Container from '@mui/material/Container';
+// import Avatar from '@mui/material/Avatar';
+// import Tooltip from '@mui/material/Tooltip';
+// import MenuItem from '@mui/material/MenuItem';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
@@ -32,12 +32,18 @@ import Badge from '@mui/material/Badge';
 import Card from '@mui/material/Card';
 import InfoIcon from '@mui/icons-material/Info';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import useWindowSize from 'react-use/lib/useWindowSize'
-import Confetti from 'react-confetti'
+import useWindowSize from 'react-use/lib/useWindowSize';
+import Confetti from 'react-confetti';
+//import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+
+const context = createContext({ state: 40 });
 
 
-const pages = ['Movies', 'Category', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
+//const pages = ['Movies', 'Category', 'Blog'];
+//const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const actions = [
   { icon: <FileCopyIcon />, name: 'Copy' },
   { icon: <SaveIcon />, name: 'Save' },
@@ -122,6 +128,10 @@ function App() {
     }
   ];
 
+  const [theme, setTheme] = useState("black");
+  const obj = { theme: theme, setTheme: setTheme };
+  const styles = { background: theme === "light" ? "black" : "white",color: !(theme === "light") ? "black" : "white" };
+
   const [movieList, setMovieList] = useState(initial_movies);
 
   const deleteMovie = (index) => {
@@ -129,23 +139,13 @@ function App() {
     const remainingMovies = movieList.filter((mv, idx) => deleteIndex !== idx);
     setMovieList(remainingMovies);
   }
-  const history4 = useHistory();
+  
   return (
-    <div className="App">
+    <context.Provider value={obj}>
+    <div style={styles} className="App">
 
       {/* <Header /> */}
-      <div>
-        <AppBar className="static">
-          <Toolbar>
-            <Button color='inherit' onClick={() => history4.push("/")}>Home</Button>
-            <Button color='inherit' onClick={() => history4.push("/movies")}>Movies</Button>
-            <Button color='inherit' onClick={() => history4.push("/films")}>Films</Button>
-            <Button color='inherit' onClick={() => history4.push("/movie/add")}>Add Movie</Button>
-            <Button color='inherit' onClick={() => history4.push("/colorgame")}>Color Game</Button>
-            <Button color='inherit' onClick={() => history4.push("/game")}>TicTacToe</Button>
-          </Toolbar>
-        </AppBar>
-      </div>
+     <Header />
       {/* <MenuLink /> */}
       <section className='router1'>
         <Switch>
@@ -190,23 +190,42 @@ function App() {
         </Switch>
       </section>
     </div>
+    </context.Provider>
   );
 }
 
 export default App;
 
-
-
+function Header(){
+  const { theme, setTheme } = useContext(context);
+  const styles = !(theme === "light") ? "primary" : "error";
+  const history4 = useHistory();
+  return( <div>
+    <AppBar color={styles} className="static">
+      <Toolbar className='header1'>
+        <Button color='inherit' onClick={() => history4.push("/")}>Home</Button>
+        <Button color='inherit' onClick={() => history4.push("/movies")}>Movies</Button>
+        <Button color='inherit' onClick={() => history4.push("/films")}>Films</Button>
+        <Button color='inherit' onClick={() => history4.push("/movie/add")}>Add Movie</Button>
+        <Button color='inherit' onClick={() => history4.push("/colorgame")}>Color Game</Button>
+        <Button color='inherit' onClick={() => history4.push("/game")}>TicTacToe</Button>
+        <IconButton sx={{ ml: 1 }}  color="inherit" onClick={()=>setTheme(theme === "light" ? "dark" : "light")}>
+        {theme === "light" === 'dark' ? <Brightness4Icon /> : <Brightness7Icon />  }
+        </IconButton>
+      </Toolbar>
+    </AppBar>
+  </div>);
+}
 
 function TicTacToe() {
   const { width, height } = useWindowSize();
-  const init=Array(9).fill(null);
+  const init = Array(9).fill(null);
   const [board, setBoard] = useState(init);
   //X starts the turn so true 
-  
+
   const [isXturn, setIsXTurn] = useState(true);
- 
- 
+
+
   const handleClick = (index) => {
     //update only untouched box
     //falsy logic
@@ -219,8 +238,8 @@ function TicTacToe() {
     }
   };
 
- 
-  function decideWinner(board){
+
+  function decideWinner(board) {
     const lines = [
       [0, 1, 2],
       [3, 4, 5],
@@ -237,7 +256,7 @@ function TicTacToe() {
       if (board[a] && board[a] === board[b] && board[a] === board[c]) {
         console.log("winner is", board[a]);
         return board[a];
-      } 
+      }
     }
     //when no winner
     return null;
@@ -254,14 +273,14 @@ function TicTacToe() {
     status = 'Next player: ' + (isXturn ? "X" : "O");
   }
 
- 
+
 
   return (
     <div className='container'>
       {winner ? <Confetti width={width} height={height} gravity={0.03} /> : ""}
       <div>{status}
-      <Button type="button" className="btn" onClick={()=>{setBoard(init)}}>Reset</Button>
-      
+        <Button type="button" className="btn" onClick={() => { setBoard(init) }}>Reset</Button>
+
       </div>
       <div className='grid'>
         {board.map((val, index) => (<GameBox key={index} val={val} onPlayerClick={() => handleClick(index)} />))}
@@ -314,11 +333,13 @@ function AddMovie({ movieList, setMovieList }) {
   const [rating, setRating] = useState("");
   const [summary, setSummary] = useState("");
   const history = useHistory();
+  const { theme } = useContext(context);
+  const styles = {background:(theme === "light") ? "white" : ""};
 
   return (<div className="container">
     <div className="add-movie-form">
       <h2>Add a Movie</h2>
-      <TextField id="outlined-basic" variant="outlined"
+      <TextField id="outlined-basic" variant="outlined" style={styles}
 
         onChange={(event) => setName(event.target.value)}
         value={name}
@@ -327,7 +348,7 @@ function AddMovie({ movieList, setMovieList }) {
         label="Enter Movie Name"
         className="input-text"
       />
-      <TextField id="outlined-basic" variant="outlined"
+      <TextField id="outlined-basic" variant="outlined" style={styles}
         value={poster}
         onChange={(event) => setPoster(event.target.value)}
         type="text"
@@ -335,7 +356,7 @@ function AddMovie({ movieList, setMovieList }) {
         label="Enter Movie Poster URL"
         className="input-text"
       />
-      <TextField id="outlined-basic" variant="outlined"
+      <TextField id="outlined-basic" variant="outlined" style={styles}
 
         value={rating}
         onChange={(event) => setRating(event.target.value)}
@@ -344,7 +365,7 @@ function AddMovie({ movieList, setMovieList }) {
         label="Enter Movie Rating"
         className="input-text"
       />
-      <TextField id="outlined-basic" variant="outlined"
+      <TextField id="outlined-basic" variant="outlined" style={styles}
 
         value={summary}
         onChange={(event) => setSummary(event.target.value)}
@@ -384,145 +405,145 @@ function NotFound() {
   );
 }
 
-function MenuLink() {
-  return (
-    <nav>
-      <Link to="/">Home</Link>
-      <Link to="/movies">Movies</Link>
-      <Link to="/movie/add">Add Movie</Link>
-      <Link to="/colorgame">Color game</Link>
-    </nav>
-  );
-}
+// function MenuLink() {
+//   return (
+//     <nav>
+//       <Link to="/">Home</Link>
+//       <Link to="/movies">Movies</Link>
+//       <Link to="/movie/add">Add Movie</Link>
+//       <Link to="/colorgame">Color game</Link>
+//     </nav>
+//   );
+// }
 
-function Header() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+// function Header() {
+//   const [anchorElNav, setAnchorElNav] = React.useState(null);
+//   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
+//   const handleOpenNavMenu = (event) => {
+//     setAnchorElNav(event.currentTarget);
+//   };
+//   const handleOpenUserMenu = (event) => {
+//     setAnchorElUser(event.currentTarget);
+//   };
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
+//   const handleCloseNavMenu = () => {
+//     setAnchorElNav(null);
+//   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-  return (
-    <div className='header1'>
+//   const handleCloseUserMenu = () => {
+//     setAnchorElUser(null);
+//   };
+//   return (
+//     <div className='header1'>
 
-      <AppBar position="static">
-        <Container maxWidth="xl">
-          <Toolbar disableGutters>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-            >
-              <img
-                src="https://4.bp.blogspot.com/-mL98KmcE8Kk/XMv9jXDde0I/AAAAAAAAACk/DqKziD6eVrYFGU14tmS1r6QXUFaGZkEtQCK4BGAYYCw/s1600/JPEG%2BLOGO.jpg"
-                alt="header"
-              />
-            </Typography>
+//       <AppBar position="static">
+//         <Container maxWidth="xl">
+//           <Toolbar disableGutters>
+//             <Typography
+//               variant="h6"
+//               noWrap
+//               component="div"
+//               sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+//             >
+//               <img
+//                 src="https://4.bp.blogspot.com/-mL98KmcE8Kk/XMv9jXDde0I/AAAAAAAAACk/DqKziD6eVrYFGU14tmS1r6QXUFaGZkEtQCK4BGAYYCw/s1600/JPEG%2BLOGO.jpg"
+//                 alt="header"
+//               />
+//             </Typography>
 
-            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleOpenNavMenu}
-                color="inherit"
-              >
-                <MenuIcon />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-                sx={{
-                  display: { xs: 'block', md: 'none' },
-                }}
-              >
-                {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
-            >
-              LOGO
-            </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  {page}
-                </Button>
-              ))}
-            </Box>
+//             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+//               <IconButton
+//                 size="large"
+//                 aria-label="account of current user"
+//                 aria-controls="menu-appbar"
+//                 aria-haspopup="true"
+//                 onClick={handleOpenNavMenu}
+//                 color="inherit"
+//               >
+//                 <MenuIcon />
+//               </IconButton>
+//               <Menu
+//                 id="menu-appbar"
+//                 anchorEl={anchorElNav}
+//                 anchorOrigin={{
+//                   vertical: 'bottom',
+//                   horizontal: 'left',
+//                 }}
+//                 keepMounted
+//                 transformOrigin={{
+//                   vertical: 'top',
+//                   horizontal: 'left',
+//                 }}
+//                 open={Boolean(anchorElNav)}
+//                 onClose={handleCloseNavMenu}
+//                 sx={{
+//                   display: { xs: 'block', md: 'none' },
+//                 }}
+//               >
+//                 {pages.map((page) => (
+//                   <MenuItem key={page} onClick={handleCloseNavMenu}>
+//                     <Typography textAlign="center">{page}</Typography>
+//                   </MenuItem>
+//                 ))}
+//               </Menu>
+//             </Box>
+//             <Typography
+//               variant="h6"
+//               noWrap
+//               component="div"
+//               sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
+//             >
+//               LOGO
+//             </Typography>
+//             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+//               {pages.map((page) => (
+//                 <Button
+//                   key={page}
+//                   onClick={handleCloseNavMenu}
+//                   sx={{ my: 2, color: 'white', display: 'block' }}
+//                 >
+//                   {page}
+//                 </Button>
+//               ))}
+//             </Box>
 
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: '45px' }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-          </Toolbar>
-        </Container>
-      </AppBar>
+//             <Box sx={{ flexGrow: 0 }}>
+//               <Tooltip title="Open settings">
+//                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+//                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+//                 </IconButton>
+//               </Tooltip>
+//               <Menu
+//                 sx={{ mt: '45px' }}
+//                 id="menu-appbar"
+//                 anchorEl={anchorElUser}
+//                 anchorOrigin={{
+//                   vertical: 'top',
+//                   horizontal: 'right',
+//                 }}
+//                 keepMounted
+//                 transformOrigin={{
+//                   vertical: 'top',
+//                   horizontal: 'right',
+//                 }}
+//                 open={Boolean(anchorElUser)}
+//                 onClose={handleCloseUserMenu}
+//               >
+//                 {settings.map((setting) => (
+//                   <MenuItem key={setting} onClick={handleCloseNavMenu}>
+//                     <Typography textAlign="center">{setting}</Typography>
+//                   </MenuItem>
+//                 ))}
+//               </Menu>
+//             </Box>
+//           </Toolbar>
+//         </Container>
+//       </AppBar>
 
-    </div>
-  );
-}
+//     </div>
+//   );
+// }
 
 function Movie({ name, poster, rating, summary, deleteButton, id }) {
   const history1 = useHistory();
