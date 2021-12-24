@@ -7,7 +7,6 @@ import {
   Redirect,
 } from "react-router-dom";
 import Button from "@mui/material/Button";
-import DeleteIcon from "@mui/icons-material/Delete";
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -20,12 +19,12 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import Paper from "@mui/material/Paper";
 import { AddColor } from "./AddColor";
-import { Movie } from "./Movie";
 import { NotFound } from "./NotFound";
 import { AddMovie } from "./AddMovie";
 import { MovieDetails } from "./MovieDetails";
 import { BasicSpeedDial } from "./BasicSpeedDial";
 import { TicTacToe } from "./TicTacToe";
+import { MovieList } from "./MovieList";
 
 export const actions = [
   { icon: <FileCopyIcon />, name: "Copy" },
@@ -37,6 +36,8 @@ export const actions = [
 function App() {
   const history4 = useHistory();
   const [mode, setMode] = useState("light");
+
+
 
   const theme1 = createTheme({
     palette: {
@@ -57,11 +58,7 @@ function App() {
       });
   }, []);
 
-  const deleteMovie = (index) => {
-    const deleteIndex = index;
-    const remainingMovies = movieList.filter((mv, idx) => deleteIndex !== idx);
-    setMovieList(remainingMovies);
-  };
+ 
 
   return (
     <ThemeProvider theme={theme1}>
@@ -101,6 +98,7 @@ function App() {
         </IconButton> */}
               <Button
                 color="inherit"
+                sx={{marginLeft: "auto"}}
                 onClick={() => setMode(mode === "light" ? "dark" : "light")}
               >
                 {" "}
@@ -129,28 +127,7 @@ function App() {
                 <AddMovie movieList={movieList} setMovieList={setMovieList} />
               </Route>
               <Route path="/movies">
-                <div className="movie-list">
-                  {movieList.map(({ name, poster, rating, summary }, i) => (
-                    <Movie
-                      key={i}
-                      deleteButton={
-                        <Button
-                          variant="contained"
-                          startIcon={<DeleteIcon />}
-                          color="error"
-                          onClick={() => deleteMovie(i)}
-                        >
-                          Delete
-                        </Button>
-                      }
-                      name={name}
-                      poster={poster}
-                      rating={rating}
-                      summary={summary}
-                      id={i}
-                    />
-                  ))}
-                </div>
+                <MovieList movieList={movieList} setMovieList={setMovieList}/>
                 <div className="positiond">
                   <BasicSpeedDial />
                 </div>

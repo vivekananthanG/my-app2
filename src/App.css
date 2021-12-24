@@ -20,19 +20,24 @@
   position:relative;
 }
 
-TextField{
-  margin: 0;
-}
+
 
 .Card-specs {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 .Card {
   width: 340px;
   color: white;
 }
+
+.Card:hover {
+  margin-top: -.25rem;
+  margin-bottom: .25rem;
+  box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.3);
+}
+
 .movie-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -144,7 +149,8 @@ max-width: 45rem;
 
 .header1{
 display: flex;
-justify-content: space-evenly;
+
+
 }
 
 .white-content {
