@@ -62,5 +62,13 @@
     "rating": 8,
     "summary": "Remy, a rat, aspires to become a renowned French chef. However, he fails to realise that people despise rodents and will never enjoy a meal cooked by him.",
     "trailer": "https://www.youtube.com/embed/NgsQ8mVkN8w"
+  },
+  {
+    "name": "Thor: Ragnarok",
+    "poster": "https://m.media-amazon.com/images/M/MV5BMjMyNDkzMzI1OF5BMl5BanBnXkFtZTgwODcxODg5MjI@._V1_.jpg",
+    "rating": "7.9",
+    "summary": "Imprisoned on the planet Sakaar, Thor must race against time to return to Asgard and stop Ragnarök, the destruction of his world, at the hands of the powerful and ruthless villain Hela.",
+    "trailer": "https://www.youtube.com/embed/ue80QwXMRHg",
+    "id": "106"
   }
 ]

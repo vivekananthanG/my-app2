@@ -11,6 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import Card from "@mui/material/Card";
 import InfoIcon from "@mui/icons-material/Info";
 import { Counter } from "./Counter";
+import EditIcon from '@mui/icons-material/Edit';
 
 export function Movie({ name, poster, rating, summary, deleteButton, id }) {
   const history1 = useHistory();
@@ -25,16 +26,9 @@ export function Movie({ name, poster, rating, summary, deleteButton, id }) {
     <Card className="Card">
       <img src={poster} alt={name} className="Card-poster" />
       <div className="Card-specs">
-        <h3 className="Card-name">
-          {name}{" "}
-          <IconButton
-            onClick={() => history1.push(`/movies/${id}`)}
-            color="primary"
-            aria-label="movie details"
-          >
-            <InfoIcon />
-          </IconButton>
-        </h3>
+        <h4 className="Card-name">
+          {name}
+        </h4>
         <p style={styles} className="Card-rating">
           ⭐{rating}
         </p>
@@ -51,7 +45,7 @@ export function Movie({ name, poster, rating, summary, deleteButton, id }) {
           id="panel1bh-header"
         >
           <Typography sx={{ width: "33%", flexShrink: 0 }}>
-            Toggle dessciption
+            Summary
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -59,7 +53,21 @@ export function Movie({ name, poster, rating, summary, deleteButton, id }) {
         </AccordionDetails>
       </Accordion>
       <div className="movie-actions">
+      <IconButton
+            onClick={() => history1.push(`/movies/${id}`)}
+            color="primary"
+            aria-label="movie details"
+          >
+            <InfoIcon />
+          </IconButton>
         <Counter />
+        <IconButton
+        color="primary"
+        onClick={() => history1.push(`/movie/edit/${id}`)}
+        aria-label="Edit movie"
+      >
+        <EditIcon />
+      </IconButton>
         {deleteButton}
       </div>
       <div className="rate">

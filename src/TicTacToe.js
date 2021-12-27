@@ -6,6 +6,24 @@ import Confetti from "react-confetti";
 import { GameBox } from "./GameBox";
 
 export function TicTacToe() {
+
+  // const handleClick=(mode)=>
+  // {
+  //   mode === true ? (<Game value={true} />) : (<Game value={false}/>)
+  // }
+
+  return(
+    <div>
+      {/* <h2>Choose the player</h2>
+  <GameBox val="X" onPlayerClick={() => handleClick(true)}/>
+  <GameBox val="O" onPlayerClick={() => handleClick(false)}/> */}
+  <Game />
+
+  </div>
+  );
+}
+
+function Game(){
   const { width, height } = useWindowSize();
   const init = Array(9).fill(null);
   const [board, setBoard] = useState(init);

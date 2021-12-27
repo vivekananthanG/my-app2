@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Switch,
   Route,
@@ -25,6 +25,7 @@ import { MovieDetails } from "./MovieDetails";
 import { BasicSpeedDial } from "./BasicSpeedDial";
 import { TicTacToe } from "./TicTacToe";
 import { MovieList } from "./MovieList";
+import { EditMovie } from "./EditMovie";
 
 export const actions = [
   { icon: <FileCopyIcon />, name: "Copy" },
@@ -45,18 +46,7 @@ function App() {
     },
   });
 
-  const [movieList, setMovieList] = useState([]);
 
-  useEffect(() => {
-    fetch("https://61c412bef1af4a0017d99275.mockapi.io/movies", {
-      method: "GET",
-    })
-      .then((data) => data.json())
-      .then((mvs) => setMovieList(mvs))
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
 
  
 
@@ -115,19 +105,24 @@ function App() {
           <section className="router1">
             <Switch>
               <Route exact path="/">
+                <div className="animate">
                 <h1>Welcome to Movie app 😊😊😊!!!</h1>
+                </div>
               </Route>
               <Route path="/films">
                 <Redirect to="/movies" />
               </Route>
               <Route path="/movies/:id">
-                <MovieDetails movieList={movieList} />
+                <MovieDetails />
               </Route>
               <Route path="/movie/add">
-                <AddMovie movieList={movieList} setMovieList={setMovieList} />
+                <AddMovie /> 
+              </Route>
+              <Route path="/movie/edit/:id">
+                <EditMovie /> 
               </Route>
               <Route path="/movies">
-                <MovieList movieList={movieList} setMovieList={setMovieList}/>
+                <MovieList />
                 <div className="positiond">
                   <BasicSpeedDial />
                 </div>
@@ -151,5 +146,6 @@ function App() {
 }
 
 export default App;
+
 
 
