@@ -8,26 +8,35 @@ import TextField from "@mui/material/TextField";
 
 export function EditMovie() {
   const { id } = useParams();
-  // const movie = movieList[id];
-  const history2 = useHistory();
-  const [name, setName] = useState("");
-  const [poster, setPoster] = useState("");
-  const [rating, setRating] = useState("");
-  const [summary, setSummary] = useState("");
-  const [trailer, setTrailer] = useState("");
+  const [movie,setMovie]=useState(null);
 
   const getMovie = () => {
     fetch(`https://61c412bef1af4a0017d99275.mockapi.io/movies/${id}`, {
       method: "GET",
     })
       .then((data) => data.json())
-      .then(({ name, poster, rating, summary, trailer }) => { setName(name); setPoster(poster); setRating(rating); setSummary(summary); setTrailer(trailer); })
+      .then((mv)=>setMovie(mv) )
       .catch((err) => {
         console.log(err);
       });
   };
 
   useEffect(getMovie, []);
+
+return movie?<UpdateMovie movie={movie}/>:"";
+}
+
+function UpdateMovie({movie}){
+  
+  // const movie = movieList[id];
+  const history2 = useHistory();
+  const [name, setName] = useState(movie.name);
+  const [poster, setPoster] = useState(movie.poster);
+  const [rating, setRating] = useState(movie.rating);
+  const [summary, setSummary] = useState(movie.summary);
+  const [trailer, setTrailer] = useState(movie.trailer);
+
+  
 
   const editMovie = () => {
     const updatedMovie = {
@@ -40,7 +49,7 @@ export function EditMovie() {
     console.log(updatedMovie);
     //shorthand
     // setMovieList([...movieList, newMovie]);
-    fetch(`https://61c412bef1af4a0017d99275.mockapi.io/movies/${id}`, {
+    fetch(`https://61c412bef1af4a0017d99275.mockapi.io/movies/${movie.id}`, {
       method: "PUT",
       body: JSON.stringify(updatedMovie),
       headers: { "Content-Type": "application/json", },
@@ -55,12 +64,11 @@ export function EditMovie() {
   return (
     <div className="container">
       <div className="add-movie-form">
-        <h2>Add a Movie</h2>
+        <h2>Edit the Movie</h2>
         <TextField
           id="outlined"
           variant="outlined"
           onChange={(event) => setName(event.target.value)}
-          defaultValue="Enter Movie Name"
           value={name}
           type="text"
           name="name"
@@ -69,7 +77,6 @@ export function EditMovie() {
         <TextField
           id="outlined-basic"
           variant="outlined"
-          defaultValue="Enter Movie Poster URL"
           value={poster}
           onChange={(event) => setPoster(event.target.value)}
           type="text"
@@ -79,7 +86,6 @@ export function EditMovie() {
         <TextField
           id="outlined-basic"
           variant="outlined"
-          defaultValue="Enter Movie Rating"
           value={rating}
           onChange={(event) => setRating(event.target.value)}
           type="text"
@@ -89,7 +95,6 @@ export function EditMovie() {
         <TextField
           id="outlined-basic"
           variant="outlined"
-          defaultValue="Enter Movie Summary"
           value={summary}
           onChange={(event) => setSummary(event.target.value)}
           type="text"
@@ -99,7 +104,6 @@ export function EditMovie() {
         <TextField
           id="outlined-basic"
           variant="outlined"
-          defaultValue="Enter Movie Trailer URL"
           value={trailer}
           onChange={(event) => setTrailer(event.target.value)}
           type="text"
@@ -107,8 +111,8 @@ export function EditMovie() {
           label="Enter Movie Trailer URL"
           className="input-text" />
 
-        <Button variant="outlined" onClick={editMovie}>
-          Edit Movie
+        <Button variant="outlined" color="success" onClick={editMovie}>
+          Save
         </Button>
         <div className="movie-details-container">
           <Button

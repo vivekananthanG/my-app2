@@ -26,6 +26,7 @@ import { BasicSpeedDial } from "./BasicSpeedDial";
 import { TicTacToe } from "./TicTacToe";
 import { MovieList } from "./MovieList";
 import { EditMovie } from "./EditMovie";
+import { BasicForm } from "./formValidationSchema";
 
 export const actions = [
   { icon: <FileCopyIcon />, name: "Copy" },
@@ -133,6 +134,9 @@ function App() {
               <Route path="/game">
                 <TicTacToe />
               </Route>
+              <Route path="/basic-form">
+                <BasicForm />
+              </Route>
               <Route path="**">
                 <NotFound />
               </Route>
@@ -146,6 +150,4 @@ function App() {
 }
 
 export default App;
-
-
 
